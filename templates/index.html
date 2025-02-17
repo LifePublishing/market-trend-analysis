@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市場トレンド</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container mt-4">
+        <h1 class="fw-bold">市場トレンド</h1>
+
+        <div class="row mt-4">
+            <!-- 株価変動ランキング -->
+            <div class="col-md-6">
+                <div class="card shadow p-3">
+                    <h4 class="fw-bold"><span>📈</span> 株価変動ランキング</h4>
+                    <table class="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>銘柄コード</th>
+                                <th>銘柄名</th>
+                                <th>変動率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-rankings">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 円グラフ -->
+            <div class="col-md-6 text-center">
+                <h4 class="fw-bold">市場テーマの注目度</h4>
+                <img src="{{ url_for('static', filename='pie_chart.png') }}" class="img-fluid" alt="市場テーマの注目度">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch("/stock_trends")
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.getElementById("stock-rankings");
+                tableBody.innerHTML = "";
+                data.forEach(stock => {
+                    let row = `<tr>
+                        <td>${stock.code}</td>
+                        <td>${stock.name}</td>
+                        <td>${stock.change_rate.toFixed(2)}%</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            });
+    </script>
+
+</body>
+</html>
