@@ -18,7 +18,8 @@ sizes = [item["count"] for item in market_data]
 # 円グラフの作成
 fig, ax = plt.subplots(figsize=(7, 7))  # サイズを大きめに設定
 wedges, texts, autotexts = ax.pie(
-    sizes, labels=labels, autopct="%1.1f%%", startangle=90, counterclock=False
+    sizes, labels=labels, autopct="%1.1f%%", startangle=90, counterclock=False,
+    pctdistance=0.6, labeldistance=1.2
 )
 
 # フォント適用
@@ -29,7 +30,13 @@ for text in texts + autotexts:
 ax.set_title("市場テーマの注目度", fontproperties=font_prop, fontsize=16)
 
 # レイアウト調整（見切れ防止）
-plt.subplots_adjust(left=0.2, right=0.8, top=0.85, bottom=0.2)
+plt.subplots_adjust(left=0.3, right=0.7, top=0.85, bottom=0.3)
+
+# 長いラベルを改行して調整
+for text in texts:
+    if "・" in text.get_text():  # 「・」で改行
+        new_text = text.get_text().replace("・", "\n")
+        text.set_text(new_text)
 
 # 画像保存
 plt.savefig("static/pie_chart.png", bbox_inches='tight', dpi=100)
