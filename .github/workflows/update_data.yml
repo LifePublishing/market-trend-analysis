@@ -1,0 +1,31 @@
+name: Update Market Trends Data
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # 毎日 8:00 JST (UTC 23:00)
+
+jobs:
+  update_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: レポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Pythonをセットアップ
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: 必要なライブラリをインストール
+        run: pip install requests
+
+      - name: `update_market_trends.py` を実行
+        run: python update_market_trends.py
+
+      - name: 更新したデータをコミット＆プッシュ
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add static/market_trends.json
+          git commit -m "✅ 市場トレンドデータを自動更新 $(date +'%Y-%m-%d')"
+          git push
