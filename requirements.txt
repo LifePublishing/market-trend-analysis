@@ -1,0 +1,11 @@
+Flask 
+gunicorn 
+requests 
+beautifulsoup4 
+pandas 
+matplotlib 
+numpy 
+scikit-learn 
+lxml 
+yahoo_fin 
+yfinance 
