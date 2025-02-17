@@ -17,15 +17,15 @@ jobs:
           python-version: 3.11
 
       - name: 必要なライブラリをインストール
-        run: pip install requests
+        run: pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin
 
-      - name: `update_market_trends.py` を実行
-        run: python update_market_trends.py
+      - name: update_market_trends.py を実行
+        run: python update_market_trends.py  # ← バッククォート (`) を削除
 
       - name: 更新したデータをコミット＆プッシュ
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add static/market_trends.json
-          git commit -m "✅ 市場トレンドデータを自動更新 $(date +'%Y-%m-%d')"
+          git commit -m "✅ 市場トレンドデータを自動更新 $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
