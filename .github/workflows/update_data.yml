@@ -5,7 +5,6 @@ on:
     - cron: '0 23 * * *'  # 毎日 8:00 JST (UTC 23:00)
   workflow_dispatch:  # これを追加（手動実行ボタンを表示させる）
 
-
 jobs:
   update_data:
     runs-on: ubuntu-latest
@@ -18,11 +17,14 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: 必要なライブラリをインストール
-        run: pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin
+      - name: 必要なパッケージをインストール
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mecab libmecab-dev mecab-ipadic-utf8
+          pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin fugashi mecab-python3
 
-      - name: update_market_trends.py を実行
-        run: python update_market_trends.py  # ← バッククォート (`) を削除
+      - name: `update_market_trends.py` を実行
+        run: python update_market_trends.py
 
       - name: 更新したデータをコミット＆プッシュ
         run: |
