@@ -3,8 +3,7 @@ name: Update Market Trends Data
 on:
   schedule:
     - cron: '0 23 * * *'  # 毎日 8:00 JST (UTC 23:00)
-  workflow_dispatch: {}  # 空のオブジェクト `{}` を指定
-
+  workflow_dispatch: {}  # 手動実行を有効化
 
 jobs:
   update_data:
@@ -22,7 +21,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mecab libmecab-dev mecab-ipadic-utf8
-          pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin fugashi mecab-python3
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin fugashi mecab-python3 unidic-lite
 
       - name: `update_market_trends.py` を実行
         run: python update_market_trends.py
@@ -33,4 +33,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add static/market_trends.json
           git commit -m "✅ 市場トレンドデータを自動更新 $(date +'%Y-%m-%d')" || echo "No changes to commit"
-          git push
+          git push || echo "No changes to push"
