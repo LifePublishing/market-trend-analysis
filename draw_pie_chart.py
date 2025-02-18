@@ -16,29 +16,20 @@ labels = [item["theme"] for item in market_data]
 sizes = [item["count"] for item in market_data]
 
 # 円グラフの作成
-fig, ax = plt.subplots(figsize=(7, 7))  # サイズを大きめに設定
+fig, ax = plt.subplots(figsize=(7, 7))  # サイズを少し大きめに設定
 wedges, texts, autotexts = ax.pie(
-    sizes, labels=labels, autopct="%1.1f%%", startangle=90, counterclock=False,
-    pctdistance=0.6, labeldistance=1.2
+    sizes, labels=labels, autopct="%1.1f%%", startangle=90, counterclock=False
 )
 
 # フォント適用
 for text in texts + autotexts:
     text.set_fontproperties(font_prop)
-    text.set_fontsize(12)  # フォントサイズを調整
+    text.set_fontsize(14)  # フォントサイズを大きめに設定
 
 ax.set_title("市場テーマの注目度", fontproperties=font_prop, fontsize=16)
 
-# レイアウト調整（見切れ防止）
-plt.subplots_adjust(left=0.3, right=0.7, top=0.85, bottom=0.3)
-
-# 長いラベルを改行して調整
-for text in texts:
-    if "・" in text.get_text():  # 「・」で改行
-        new_text = text.get_text().replace("・", "\n")
-        text.set_text(new_text)
-
-# 画像保存
-plt.savefig("static/pie_chart.png", bbox_inches='tight', dpi=100)
+# 画像保存時にラベルが見切れないように調整
+plt.subplots_adjust(left=0.3, right=0.7, top=0.9, bottom=0.1)  # 余白を広げる
+plt.savefig("static/pie_chart.png", bbox_inches='tight', dpi=100, bbox_extra_artists=texts)
 
 print("✅ 円グラフを 'static/pie_chart.png' に保存しました！")
