@@ -4,17 +4,20 @@ import os
 
 app = Flask(__name__)
 
+DATA_PATH_MARKET = os.path.join("static", "market_trends.json")
+DATA_PATH_STOCKS = os.path.join("static", "stock_data.json")
+
+def load_data(path):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
 @app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/stock_trends")
-def stock_trends():
-    data_path = os.path.join("static", "stock_trends.json")
-    with open(data_path, "r", encoding="utf-8") as f:
-        stock_data = json.load(f)
-
-    return jsonify(stock_data)
+def home():
+    market_trends = load_data(DATA_PATH_MARKET)
+    stock_data = load_data(DATA_PATH_STOCKS)
+    return render_template("index.html", market_trends=market_trends, stock_data=stock_data)
 
 if __name__ == "__main__":
     app.run(debug=True)

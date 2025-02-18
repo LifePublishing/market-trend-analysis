@@ -1,44 +1,42 @@
-import yfinance as yf
 import json
+import os
+import time
+from yahoo_fin.stock_info import get_day_gainers
 
-# 監視する銘柄リスト（例）
-stocks_list = [
-    {"ticker": "7203.T", "name": "トヨタ"},
-    {"ticker": "6758.T", "name": "ソニー"},
-    {"ticker": "9984.T", "name": "ソフトバンクG"},
-    {"ticker": "7267.T", "name": "ホンダ"},
-    {"ticker": "8306.T", "name": "三菱UFJ"}
-]
+OUTPUT_PATH = os.path.join("static", "stock_data.json")
 
-def fetch_stock_changes():
-    stock_changes = []
-    for stock in stocks_list:
-        ticker = stock["ticker"]
-        name = stock["name"]
+def fetch_stock_data():
+    """ 東証全銘柄の株価変動率を取得 """
+    try:
+        gainers = get_day_gainers()
+        stock_changes = []
+        
+        for _, row in gainers.iterrows():
+            stock_changes.append({
+                "code": row["Symbol"],
+                "name": row["Name"],
+                "change_percent": row["% Change"]
+            })
 
-        # 株価取得（直近の終値と過去の終値）
-        try:
-            data = yf.Ticker(ticker).history(period="5d")  # 直近5日間のデータ
-            if len(data) < 2:
-                continue  # 十分なデータがない場合スキップ
+        return stock_changes
+    except Exception as e:
+        print(f"❌ 株価データ取得エラー: {e}")
+        return []
 
-            latest_price = data["Close"].iloc[-1]  # 最新の終値
-            past_price = data["Close"].iloc[0]     # 5日前の終値
-            change_percent = round(((latest_price / past_price) - 1) * 100, 2)
+def save_data(data):
+    """ JSONデータを保存 """
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
-            stock_changes.append({"name": name, "change": change_percent})
-
-        except Exception as e:
-            print(f"エラー: {name} のデータ取得失敗 -> {e}")
-
-    # 変動率の降順に並べる
-    stock_changes.sort(key=lambda x: x["change"], reverse=True)
-
-    # JSONで保存
-    with open("stock_data.json", "w", encoding="utf-8") as f:
-        json.dump(stock_changes, f, ensure_ascii=False, indent=4)
-
-    print("✅ 株価変動データを 'stock_data.json' に保存しました！")
+def main():
+    print("🔄 株価データの取得開始")
+    stock_data = fetch_stock_data()
+    
+    if stock_data:
+        save_data(stock_data)
+        print("✅ 株価データを更新しました")
+    else:
+        print("❌ 株価データの更新に失敗しました")
 
 if __name__ == "__main__":
-    fetch_stock_changes()
+    main()
