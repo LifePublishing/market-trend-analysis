@@ -1,4 +1,4 @@
-name: Update Market Trends Data
+name: Update Market Trends Data 
 
 on:
   schedule:
