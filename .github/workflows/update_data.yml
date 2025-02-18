@@ -1,4 +1,4 @@
-name: Update Market Trends Data 
+﻿name: Update Market Trends Data
 
 on:
   schedule:
@@ -24,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pandas lxml yfinance yahoo_fin fugashi mecab-python3 unidic-lite
 
-      - name: `update_market_trends.py` を実行
+      - name: "update_market_trends.py を実行"
         run: python update_market_trends.py
 
       - name: 更新したデータをコミット＆プッシュ
