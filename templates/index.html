@@ -10,24 +10,39 @@
 
     <div class="container mt-4">
         <h1 class="fw-bold text-center">市場テーマスキャナー</h1>
-        <h2 class="text-center" style="font-size: 1.25em; color: gray;">本日の注目テーマ：EV・電池</h2> <!-- サイズを大きめに修正 -->
+        <h2 class="text-center" style="font-size: 1.25em; color: gray;">本日の注目テーマ：EV・電池</h2>
 
         <div class="row mt-4">
-            <!-- 株価変動ランキング -->
+            <!-- NEWS -->
             <div class="col-md-6">
                 <div class="card shadow p-3">
-                    <h4 class="fw-bold"><span>📈</span> 株価変動ランキング</h4>
-                    <table class="table table-bordered mt-3">
-                        <thead>
-                            <tr>
-                                <th>銘柄コード</th>
-                                <th>銘柄名</th>
-                                <th>変動率</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stock-rankings">
-                        </tbody>
-                    </table>
+                    <h4 class="fw-bold">📰 NEWS</h4>
+                    <div id="news-list">
+                        <div class="d-flex align-items-center border-bottom pb-2 pt-2">
+                            <img src="https://s.yimg.jp/images/media/news/ogp/fb_y_200x200.png" class="me-2" width="50" height="50">
+                            <a href="https://news.yahoo.co.jp/articles/abc123" target="_blank" class="text-decoration-none">
+                                EV市場が急成長！大手自動車メーカーの戦略とは？
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center border-bottom pb-2 pt-2">
+                            <img src="https://s.yimg.jp/images/media/news/ogp/fb_y_200x200.png" class="me-2" width="50" height="50">
+                            <a href="https://news.yahoo.co.jp/articles/def456" target="_blank" class="text-decoration-none">
+                                次世代バッテリー技術の進化でEVの未来が変わる！
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center border-bottom pb-2 pt-2">
+                            <img src="https://s.yimg.jp/images/media/news/ogp/fb_y_200x200.png" class="me-2" width="50" height="50">
+                            <a href="https://news.yahoo.co.jp/articles/ghi789" target="_blank" class="text-decoration-none">
+                                政府のEV補助金政策が市場に与える影響は？
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center border-bottom pb-2 pt-2">
+                            <img src="https://s.yimg.jp/images/media/news/ogp/fb_y_200x200.png" class="me-2" width="50" height="50">
+                            <a href="https://news.yahoo.co.jp/articles/jkl012" target="_blank" class="text-decoration-none">
+                                EV・電池関連企業の最新決算情報まとめ
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -38,23 +53,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        fetch("/stock_trends")
-            .then(response => response.json())
-            .then(data => {
-                let tableBody = document.getElementById("stock-rankings");
-                tableBody.innerHTML = "";
-                data.forEach(stock => {
-                    let row = `<tr>
-                        <td>${stock.code}</td>
-                        <td>${stock.name}</td>
-                        <td>${stock.change_rate.toFixed(2)}%</td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
-            });
-    </script>
 
 </body>
 </html>
